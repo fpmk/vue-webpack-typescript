@@ -2,7 +2,7 @@ var path = require('path')
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/main.ts'
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),
@@ -10,7 +10,7 @@ module.exports = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['', '.js', '.vue'],
+    extensions: ['', '.js', '.ts'],
     alias: {
       'src': path.resolve(__dirname, '../src')
     }
@@ -20,6 +20,14 @@ module.exports = {
   },
   module: {
     loaders: [
+      {
+        test: /\.html$/,
+        loader: "html"
+      },
+      {
+        test: /\.ts$/,
+        loader: 'ts-loader'
+      },
       {
         test: /\.vue$/,
         loader: 'vue'
@@ -50,5 +58,8 @@ module.exports = {
   },
   eslint: {
     formatter: require('eslint-friendly-formatter')
+  },
+  ts: {
+      experimentalDecorators: true
   }
 }

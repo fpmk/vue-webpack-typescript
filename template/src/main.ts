@@ -1,7 +1,8 @@
-import Vue from 'vue'
+/// <reference path='../typings/tsd.d.ts' />
+
+import Vue = require('vue')
 import App from './App'
 
-/* eslint-disable no-new */
 new Vue({
   el: 'body',
   components: { App }
