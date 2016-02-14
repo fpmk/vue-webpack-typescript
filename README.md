@@ -1,6 +1,6 @@
-# vue-webpack-boilerplate
+# vue-webpack-typescript-boilerplate
 
-> A full-featured Webpack setup with hot-reload, lint-on-save, unit testing & css extraction.
+> A full-featured Webpack setup with TypeScript, hot-reload, lint-on-save, unit testing & css extraction.
 
 ### Usage
 
@@ -21,6 +21,9 @@ $ npm run dev
 ├── package.json              # build scripts and dependencies
 ├── .babelrc                  # babel configuration
 ├── .eslintrc.js              # eslint configuration
+├── tsconfig.json             # TypeScript configuration
+├── tsd.json                  # tsd configuration
+├── tslint.json               # tslint configuration
 ├── build
 │   ├── dev-server.js         # development server script
 │   ├── karma.conf.js         # unit testing config
@@ -29,8 +32,9 @@ $ npm run dev
 │   └── webpack.prod.conf.js  # production webpack config
 ├── src
 │   ├── index.html            # main html file
-│   ├── main.js               # app entry file
-│   ├── App.vue               # main app component
+│   ├── main.ts               # app entry file
+│   ├── App.ts                # main app component
+│   ├── App.html              # main app component template
 │   ├── components            # ui components
 │   │   └── ...
 │   └── assets                # static assets
