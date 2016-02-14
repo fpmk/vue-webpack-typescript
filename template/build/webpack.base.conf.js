@@ -1,3 +1,7 @@
+{
+  test: /\.css$/,
+  loader: 'style!css'
+},
 var path = require('path')
 
 module.exports = {
@@ -23,6 +27,10 @@ module.exports = {
       {
         test: /\.html$/,
         loader: "html"
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css'
       },
       {
         test: /\.ts$/,
