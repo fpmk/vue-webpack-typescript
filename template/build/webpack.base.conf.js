@@ -1,7 +1,3 @@
-{
-  test: /\.css$/,
-  loader: 'style!css'
-},
 var path = require('path')
 
 module.exports = {
