@@ -8,9 +8,10 @@ This is a project template for [vue-cli](https://github.com/vuejs/vue-cli).
 
 ``` bash
 $ npm install -g vue-cli
-$ vue init webpack my-project
+$ vue init AbeHaruhiko/vue-webpack-typescript my-project
 $ cd my-project
 $ npm install
+$ tsd install
 $ npm run dev
 ```
 
