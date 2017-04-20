@@ -1,10 +1,26 @@
-import Vue = require('vue')
-import App from './App'
+import * as Vue from 'vue';
+import VueRouter from 'vue-router';
 
-import '../node_modules/semantic-ui-css/semantic.min.css'
+import { HomeComponent } from './components/home';
+import { AboutComponent } from './components/about';
+import { ListComponent } from './components/list';
+import { NavbarComponent } from './components/navbar';
 
-new Vue({
-    el: 'body',
-    components: { App }
+// register the plugin
+Vue.use(VueRouter);
+
+let router = new VueRouter({
+  routes: [
+    { path: '/', component: HomeComponent },
+    { path: '/about', component: AboutComponent },
+    { path: '/list', component: ListComponent },
+  ]
 });
 
+new Vue({
+  el: '#app-main',
+  router: router,
+  components: {
+    'navbar': NavbarComponent
+  }
+});
