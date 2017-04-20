@@ -1,6 +1,6 @@
-# {{ name }}
+# vue-table
 
-> {{ description }}
+> A Vue.js project
 
 ## Build Setup
 

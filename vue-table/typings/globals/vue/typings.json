@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/3030a4be536b6530c06b80081f1333dc0de4d703/vue/vue.d.ts",
+    "raw": "github:DefinitelyTyped/DefinitelyTyped/vue/vue.d.ts#3030a4be536b6530c06b80081f1333dc0de4d703",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/3030a4be536b6530c06b80081f1333dc0de4d703/vue/vue.d.ts"
+  }
+}
