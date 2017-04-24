@@ -1,9 +1,3 @@
-html, body, #app-main {
-  height: 100%; }
-
-.content h1 {
-  text-align: center; }
-
 .vdp-datepicker__calendar header span {
   color: #000000; }
 

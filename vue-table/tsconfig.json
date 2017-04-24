@@ -12,6 +12,17 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "node_modules/@types",
+      "customtypes"
+    ],
+    "types": [
+      "vue-resource",
+      "node",
+      "source-map",
+      "uglify-js",
+      "webpack"
+    ]
   }
 }

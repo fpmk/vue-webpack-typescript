@@ -2,4 +2,5 @@ html, body, #app-main {
     height: 100%;
 }
 
-@import '../components/home/home';
+@import '../components/users-table/users-table';
+@import '../components/user-profile/user-profile';

@@ -1,19 +1,20 @@
 import * as Vue from 'vue';
 import VueRouter from 'vue-router';
+import Rx from 'rxjs/Rx';
+import VueRx from 'vue-rx';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 
-import { HomeComponent } from './components/home';
-import { AboutComponent } from './components/about';
-import { ListComponent } from './components/list';
-import { NavbarComponent } from './components/navbar';
+import { UsersTableComponent } from './components/users-table';
+import { UserProfileComponent } from './components/user-profile';
 
-// register the plugin
+Vue.use(VueAxios, axios);
 Vue.use(VueRouter);
+Vue.use(VueRx, Rx);
 
 let router = new VueRouter({
   routes: [
-    { path: '/', component: HomeComponent },
-    { path: '/about', component: AboutComponent },
-    { path: '/list', component: ListComponent },
+    { path: '/', component: UsersTableComponent }
   ]
 });
 
@@ -21,6 +22,6 @@ new Vue({
   el: '#app-main',
   router: router,
   components: {
-    'navbar': NavbarComponent
+    'users-table': UsersTableComponent
   }
 });

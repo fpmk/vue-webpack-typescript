@@ -1,5 +1,5 @@
 const helpers = require("./helpers"),
-  webpackConfig = require("./webpack.config.base")
+  webpackConfig = require("./webpack.config.base");
 
 webpackConfig.devServer = {
   port: 8080,

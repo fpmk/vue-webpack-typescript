@@ -1,0 +1,79 @@
+<div style="width: 70%; margin: 5rem auto">
+  <div class="input-group" style="width: 35rem">
+    <div class="ui icon input" :class="{loading : searchbox.searching}">
+      <input type="text" placeholder="Search..." @keyup="search">
+      <i class="search icon"></i>
+    </div>
+  </div>
+  <br/>
+  <table class="ui fixed selectable table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Balance</th>
+        <th>Receive news</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="user of usersList">
+        <td>
+          {{ user.id }}
+        </td>
+        <td>
+          <a href="#" @click.stop="editUser(user)">{{ user.firstName }} {{ user.lastName }}</a>
+        </td>
+        <td>
+          {{ formatAmount(user.balance.amount, user.balance.currency) }}
+        </td>
+        <td>
+          <div class="ui checkbox">
+            <input type="checkbox" disabled :checked="user.receiveNews"/>
+            <label></label>
+          </div>
+        </td>
+        <td>
+          <a class="ui green empty circular label" v-if="user.status === 'ACTIVE'"></a>
+          <a class="ui grey empty circular label" v-if="user.status === 'LOCKED'"></a>
+          &nbsp;&nbsp;&nbsp;
+          <button class="ui basic button" v-if="user.status === 'ACTIVE'" @click="lockUser(user)">
+            <i class="icon lock"></i>
+          </button>
+          <button class="ui basic button" v-if="user.status === 'LOCKED'" @click="activateUser(user)">
+            <i class="icon unlock"></i>
+          </button>
+        </td>
+        <td>
+          <button class="ui basic button" @click.stop="deleteUser(user)">
+            <i class="icon remove user"></i>
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="6">
+          <div class="ui right floated pagination menu">
+            <a class="icon item" @click.stop="prevPage()">
+              <i class="left chevron icon"></i>
+            </a>
+            <a v-for="page of paging.pages"
+               :class="{ active : page === paging.currentPage }"
+               class="item"
+               @click.stop="selectPage(page)">{{ page }}</a>
+            <a class="icon item" @click.stop="nextPage()">
+              <i class="right chevron icon"></i>
+            </a>
+          </div>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  <div class="ui active loader" v-if="pageLoading"></div>
+  <template>
+    <user-profile :selectedUser="selectedUser" @userUpdated="userUpdated"></user-profile>
+  </template>
+</div>

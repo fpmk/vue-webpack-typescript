@@ -1,0 +1,66 @@
+<div class="ui page dimmer" :class="{ active : user != null }" v-if="user != null">
+  <div class="content">
+    <div class="ui active modal" style="margin-top: -21rem !important;">
+      <i class="close icon" @click="close()"></i>
+      <div class="header">
+        User profile
+      </div>
+      <div class="content">
+        <div class="description">
+          <form class="ui form">
+            <div class="field">
+              <label>First Name</label>
+              <input type="text" name="first-name" placeholder="First Name" v-model="user.firstName">
+            </div>
+            <div class="field">
+              <label>Last Name</label>
+              <input type="text" name="last-name" placeholder="Last Name" v-model="user.lastName">
+            </div>
+            <div class="field">
+              <label>Birthday</label>
+              <template>
+                <datepicker :value="convertBirthdate(user.birthdate)" v-on:selected="setDate"></datepicker>
+              </template>
+            </div>
+            <div class="field">
+              <label>Country</label>
+              <select v-model="user.country.code">
+                <option value="840">United States of America</option>
+                <option value="550">Russia</option>
+              </select>
+            </div>
+            <div class="inline fields">
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="sex" value="MALE" v-model="user.sex"/>
+                  <label>Male</label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui radio checkbox">
+                  <input type="radio" name="sex" value="FEMALE" v-model="user.sex"/>
+                  <label>Female</label>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui checkbox">
+                <input type="checkbox" v-model="user.receiveNews"/>
+                <label>Receive news</label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui positive right labeled icon button" @click="updateUser">
+          Save
+          <i class="checkmark icon"></i>
+        </div>
+        <div class="ui black deny button" @click="close()">
+          Cancel
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
