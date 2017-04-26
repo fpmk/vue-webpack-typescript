@@ -5,6 +5,9 @@
   <div class="ui labeled input" v-show="edit">
     <div class="ui label">{{cAmount.currency}}</div>
     <input type="number"
+           style="width: 8rem"
+           ref="amountInput"
+           v-focus="edit"
            v-model="cAmount.amount"
            @blur="saveEdit()"
            placeholder="Amount"/>

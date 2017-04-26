@@ -3,9 +3,13 @@ import Component from 'vue-class-component';
 import { Prop, Watch } from 'vue-property-decorator';
 import { Balance } from '../common.interface';
 import MoneyFormatter from '../users-table/money-formatter.service';
+import { Focus } from './focus.directive';
 
 @Component({
-  template: require('./inline-edit.html')
+  template: require('./inline-edit.html'),
+  directives: {
+    Focus
+  }
 })
 export class InlineEditComponent extends Vue {
 
@@ -22,6 +26,9 @@ export class InlineEditComponent extends Vue {
 
   public toggleEdit() {
     this.edit = !this.edit;
+    if (this.edit) {
+      let self = this;
+    }
   }
 
   public saveEdit() {
