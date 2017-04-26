@@ -9,7 +9,7 @@ export interface Country {
 }
 
 export interface User {
-  id: string;
+  id: number;
   balance: Balance;
   firstName: string;
   lastName: string;

@@ -4,7 +4,6 @@ import { Prop, Watch } from 'vue-property-decorator';
 import Datepicker from 'vuejs-datepicker';
 import { User } from '../common.interface';
 import UserService from '../users-table/users-table.service';
-import { AxiosPromise } from 'axios';
 
 @Component({
   template: require('./user-profile.html'),

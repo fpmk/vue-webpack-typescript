@@ -4,6 +4,9 @@ html, body, #app-main {
 .content h1 {
   text-align: center; }
 
+.ui.table thead th.sortable {
+  cursor: pointer; }
+
 .vdp-datepicker__calendar header span {
   color: #000000; }
 

@@ -1,3 +1,5 @@
 .content h1 {
-    text-align: center;
-}
+  text-align: center; }
+
+.ui.table thead th.sortable {
+  cursor: pointer; }

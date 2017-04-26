@@ -1,40 +1,49 @@
 <div style="width: 70%; margin: 5rem auto">
-  <div class="input-group" style="width: 35rem">
-    <div class="ui icon input" :class="{loading : searchbox.searching}">
-      <input type="text" placeholder="Search..." @keyup="search">
-      <i class="search icon"></i>
+  <div class="ui grid middle aligned">
+    <div class="column" style="width: auto">
+      <div class="input-group" style="width: 35rem">
+        <div class="ui icon input" :class="{loading : searchbox.searching}">
+          <input type="text" placeholder="Search..." @keyup="search">
+          <i class="search icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="column right floated" style="font-size: 1.5rem; cursor: pointer">
+      <!--<i class="icon settings"></i>-->
+      <columns-dropdown :columns="tableCols" :icon="'setting'" @columnChanged="columnChanged"></columns-dropdown>
     </div>
   </div>
   <br/>
-  <table class="ui fixed selectable table">
+  <table class="ui fixed sortable selectable table">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>User</th>
-        <th>Balance</th>
-        <th>Receive news</th>
-        <th>Status</th>
+        <th v-if="tableCols.id.visible" class="sortable sorted" @click="sort('id')" :class="sortFields[ 'id' ].sort">ID</th>
+        <th class="sortable sorted" @click="sort('fullName')" :class="sortFields[ 'fullName' ].sort">User</th>
+        <th v-if="tableCols.balance.visible" class="sortable sorted" @click="sort('balance')" :class="sortFields[ 'balance' ].sort">Balance</th>
+        <th v-if="tableCols.receiveNews.visible" class="sortable sorted" @click="sort('receiveNews')" :class="sortFields[ 'receiveNews' ].sort">Receive news</th>
+        <th v-if="tableCols.status.visible" class="sortable sorted" @click="sort('status')" :class="sortFields[ 'status' ].sort">Status</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="user of usersList">
-        <td>
+        <td v-if="tableCols.id.visible">
           {{ user.id }}
         </td>
         <td>
           <a href="#" @click.stop="editUser(user)">{{ user.firstName }} {{ user.lastName }}</a>
         </td>
-        <td>
-          {{ formatAmount(user.balance.amount, user.balance.currency) }}
+        <td v-if="tableCols.balance.visible">
+          <!--{{ formatAmount(user.balance.amount, user.balance.currency) }}-->
+          <inline-edit :balance="user.balance" @balanceChanged="balanceChanged($event, user)"></inline-edit>
         </td>
-        <td>
+        <td v-if="tableCols.receiveNews.visible">
           <div class="ui checkbox">
             <input type="checkbox" disabled :checked="user.receiveNews"/>
             <label></label>
           </div>
         </td>
-        <td>
+        <td v-if="tableCols.status.visible">
           <a class="ui green empty circular label" v-if="user.status === 'ACTIVE'"></a>
           <a class="ui grey empty circular label" v-if="user.status === 'LOCKED'"></a>
           &nbsp;&nbsp;&nbsp;
@@ -55,7 +64,19 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="6">
+        <th v-if="tableCols.id.visible"></th>
+        <th></th>
+        <th v-if="tableCols.balance.visible">
+          <div v-for="sum of summary">
+            {{formatAmount(sum.amount, sum.currency)}}
+          </div>
+        </th>
+        <th v-if="tableCols.receiveNews.visible"></th>
+        <th v-if="tableCols.status.visible"></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th :colspan="tableColsCount">
           <div class="ui right floated pagination menu">
             <a class="icon item" @click.stop="prevPage()">
               <i class="left chevron icon"></i>

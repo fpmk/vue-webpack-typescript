@@ -1,0 +1,17 @@
+<div class="ui multiple dropdown" v-click-outside="hideDropdown">
+    <span @click="toggleMenu()">
+        <span class="text" v-if="!icon">{{placeholder}}</span>
+        <i class="dropdown icon" v-if="!icon"></i>
+        <i class="icon" :class="icon" v-if="icon"></i>
+    </span>
+    <div class="menu transition" :class="stateVisible" ref="dropdownMenu">
+        <div class="scrolling menu">
+            <div class="item" v-for="item of columns">
+                <div class="ui checkbox">
+                    <input type="checkbox" @change="itemSelected(item, $event)" :checked="item.visible">
+                    <label>{{item.title}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

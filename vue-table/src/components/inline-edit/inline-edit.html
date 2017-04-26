@@ -1,0 +1,12 @@
+<div v-if="cAmount">
+  <span v-show="!edit"
+        @click="toggleEdit()">{{ formatAmount(cAmount.amount, cAmount.currency) }}</span>
+
+  <div class="ui labeled input" v-show="edit">
+    <div class="ui label">{{cAmount.currency}}</div>
+    <input type="number"
+           v-model="cAmount.amount"
+           @blur="saveEdit()"
+           placeholder="Amount"/>
+  </div>
+</div>

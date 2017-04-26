@@ -2,15 +2,20 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { User } from '../common.interface';
+import { Balance, User } from '../common.interface';
 import UserService from './users-table.service';
-import MoneyFormatter from './money-formatter.service';
 import { UserProfileComponent } from '../user-profile/user-profile';
+import { TableColumn } from './table-column.class';
+import { ColumnsDropdownComponent } from '../columns-dropdown/columns-dropdown';
+import { InlineEditComponent } from '../inline-edit/inline-edit';
+import MoneyFormatter from './money-formatter.service';
 
 @Component({
   template: require('./users-table.html'),
   components: {
-    'user-profile': UserProfileComponent
+    'user-profile': UserProfileComponent,
+    'inline-edit': InlineEditComponent,
+    'columns-dropdown': ColumnsDropdownComponent
   }
 })
 export class UsersTableComponent extends Vue {
@@ -28,6 +33,86 @@ export class UsersTableComponent extends Vue {
     pages: []
   };
   pageLoading: boolean = true;
+  tableCols =
+    {
+      id: new TableColumn('id', 'Id', true),
+      // fullName: new TableColumn('fullName', 'Full name', true),
+      balance: new TableColumn('balance', 'Balance', true),
+      receiveNews: new TableColumn('receiveNews', 'Receive news', true),
+      status: new TableColumn('status', 'Status', true),
+    };
+  tableColsCount: number = Object.keys(this.tableCols).length + 2;
+  summary: any = {};
+
+  sortListEvent: BehaviorSubject<string> = new BehaviorSubject(null);
+  sortFields = {
+    'id': {
+      sort: ''
+    },
+    'fullName': {
+      sort: ''
+    },
+    'balance': {
+      sort: ''
+    },
+    'receiveNews': {
+      sort: ''
+    },
+    'status': {
+      sort: ''
+    },
+  };
+
+  sortUsersList(field: string) {
+    if (field === '' || field === null) {
+      return;
+    }
+    for (let key in this.sortFields) {
+      if (key === field) {
+        continue;
+      }
+      this.sortFields[ key ].sort = '';
+    }
+    this.sortFields[ field ].sort = this.sortFields[ field ].sort === 'ascending' ? 'descending' : 'ascending';
+
+    let commonSort = (a: User, b: User) => {
+      if (a[ field ] < b[ field ]) {
+        return this.sortFields[ field ].sort === 'ascending' ? -1 : 1;
+      } else if (a[ field ] > b[ field ]) {
+        return this.sortFields[ field ].sort === 'descending' ? -1 : 1;
+      }
+      return 0;
+    };
+    if (field === 'balance') {
+      commonSort = (a: User, b: User) => {
+        if (a[ field ].amount < b[ field ].amount) {
+          return this.sortFields[ field ].sort === 'ascending' ? -1 : 1;
+        } else if (a[ field ].amount > b[ field ].amount) {
+          return this.sortFields[ field ].sort === 'descending' ? -1 : 1;
+        }
+        return 0;
+      };
+    }
+    if (field === 'fullName') {
+      commonSort = (a: User, b: User) => {
+        let sortA = a.firstName + ' ' + a.lastName;
+        let sortB = b.firstName + ' ' + b.lastName;
+        if (sortA < sortB) {
+          return this.sortFields[ field ].sort === 'ascending' ? -1 : 1;
+        } else if (sortA > sortB) {
+          return this.sortFields[ field ].sort === 'descending' ? -1 : 1;
+        }
+        return 0;
+      };
+    }
+    this.usersList = this.usersList.sort(
+      commonSort
+    );
+  }
+
+  sort(field: string) {
+    this.sortListEvent.next(field);
+  }
 
   public loadUsers(limit: number, offset: number) {
     this.pageLoading = true;
@@ -35,6 +120,7 @@ export class UsersTableComponent extends Vue {
                .then(
                  (res: any) => {
                    this.usersList = res.data.list;
+                   this.totalSum();
                    this.buildPaging(res.data.count);
                    this.pageLoading = false;
                  }
@@ -45,6 +131,26 @@ export class UsersTableComponent extends Vue {
                    this.pageLoading = false;
                  }
                );
+  }
+
+  private totalSum() {
+    Observable.from(this.usersList)
+              .groupBy(
+                user => user.balance.currency
+              )
+              .flatMap(group => {
+                return group.reduce((acc, currentValue) => {
+                  acc.amount += +currentValue.balance.amount;
+                  acc.currency = currentValue.balance.currency;
+                  return acc;
+                }, { amount: 0, currency: '' })
+              })
+              .toArray()
+              .subscribe(
+                res => {
+                  this.summary = res;
+                }
+              );
   }
 
   public buildPaging(totalElements: number) {
@@ -67,7 +173,7 @@ export class UsersTableComponent extends Vue {
       return;
     }
     this.paging.currentPage--;
-    this.loadUsers(this.paging.rows, this.paging.currentPage - 1);
+    this.loadUsers(this.paging.rows, (this.paging.currentPage - 1) * this.paging.rows);
   }
 
   public nextPage() {
@@ -75,7 +181,7 @@ export class UsersTableComponent extends Vue {
       return;
     }
     this.paging.currentPage++;
-    this.loadUsers(this.paging.rows, this.paging.currentPage - 1);
+    this.loadUsers(this.paging.rows, (this.paging.currentPage - 1) * this.paging.rows);
   }
 
   public selectPage(page: number) {
@@ -86,7 +192,7 @@ export class UsersTableComponent extends Vue {
     if (this.paging.currentPage > this.paging.totalPages) {
       this.paging.currentPage = this.paging.totalPages;
     }
-    this.loadUsers(this.paging.rows, this.paging.currentPage - 1);
+    this.loadUsers(this.paging.rows, (this.paging.currentPage - 1) * this.paging.rows);
   }
 
   public search(event) {
@@ -109,6 +215,7 @@ export class UsersTableComponent extends Vue {
                .then(
                  (usr: any) => {
                    user = usr;
+                   this.totalSum();
                  }
                )
                .catch(
@@ -123,6 +230,11 @@ export class UsersTableComponent extends Vue {
   }
 
   public created() {
+    this.sortListEvent.asObservable()
+        .filter(s => s != '')
+        .subscribe(
+          res => this.sortUsersList(res)
+        );
     this.searchStringEvent
         .asObservable()
         .filter(s => s != null)
@@ -155,10 +267,6 @@ export class UsersTableComponent extends Vue {
     });
   }
 
-  public formatAmount(amount: number, currencyCode: string): string {
-    return MoneyFormatter.format(amount, currencyCode);
-  }
-
   public userUpdated(user: User) {
     Observable.from(this.usersList)
               .findIndex(
@@ -183,6 +291,26 @@ export class UsersTableComponent extends Vue {
                  )
                  .catch(error => console.log(error))
     }
+  }
+
+  public columnChanged(col: TableColumn) {
+    this.tableCols[ col.id ] = col;
+    Observable.from(Object.keys(this.tableCols))
+              .map(key => this.tableCols[ key ].visible)
+              .filter(v => v)
+              .count()
+              .subscribe(
+                res => this.tableColsCount = res + 2
+              );
+  }
+
+  public balanceChanged(bal: Balance, user:User) {
+    user.balance = bal;
+    this.updateUser(user);
+  }
+
+  public formatAmount(amount: number, currencyCode: string): string {
+    return MoneyFormatter.format(+amount, currencyCode);
   }
 
 }
